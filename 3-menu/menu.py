@@ -1,5 +1,5 @@
 food = input('Выберите категорию блюд:\n - напиток - суп - десерт: ')
-# food choise
+### food choise
 match food:
     case 'напиток':
         drink = input('Выберите напиток: чай, кофе, сок: ')
