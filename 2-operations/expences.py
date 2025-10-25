@@ -1,5 +1,0 @@
-food = float(input('Сумма на еду: '))
-transport = float(input('Сумма на транспорт: '))
-entertainment = float(input('Сумма на развлечения: '))
-print(f'Общая сумма {food + transport + entertainment}')
-print(f'Средняя сумма {round((food + transport + entertainment) / 3, 2)}')
