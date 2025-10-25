@@ -1,7 +1,17 @@
-expenses = [100, 123, 200, 50, 234, 766, 1500]
-all_expenses = sum(expenses)
-average_expenses = all_expenses / len(expenses)
-min_expenses = min(expenses)
-max_expenses = max(expenses)
-result = (min_expenses, max_expenses, all_expenses)
-print(result)
+user_input = input("Введите сумму: ").split()
+
+if len(user_input) == 4:
+    if user_input[0].isdigit() and user_input[2].isdigit():
+        rubles = user_input[0]
+        kopecks = user_input[2]
+        print(f'{rubles}.{kopecks} P')
+        exit()
+
+if len(user_input) == 2:
+    if user_input[0].isdigit():
+        rubles = user_input[0]
+        kopecks = "00"
+        print(f'{rubles}.{kopecks} P')
+        exit()
+        
+print('Некорректный формат суммы')
