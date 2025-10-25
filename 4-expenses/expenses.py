@@ -16,4 +16,4 @@ if len(user_input) == 2:
         print(f'{rubles}.{kopecks} {chr(8381)}')
         exit()
 
-print('Некорректный формат суммы')
+print('Некорректный формат суммы.')
