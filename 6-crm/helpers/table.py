@@ -6,13 +6,15 @@ def format_date(d: date) -> str:
     return date.strftime(d, "%Y-%m-%d")
 
 def stringify_table(tasks: list[Task]) -> str:
-    headers = ["ID", "Название", "Статус", "Приоритет", "Теги", "Дата"]
+    headers = ["ID", "Название", "Сумма", "Статус", "Приоритет", "Теги", "Дата"]  # ← добавили "Сумма"
     rows = []
     for task in tasks:
         tags = ",".join(sorted(task["tags"])) if task["tags"] else "-"
+        amount = f"{task.get('amount', 0):.2f}" if task.get("amount") is not None else "-"
         rows.append([
             str(task["id"]),
             task["title"],
+            amount,                                     # ← новая колонка
             task["status"],
             task["priority"],
             tags,

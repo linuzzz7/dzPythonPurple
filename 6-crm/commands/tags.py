@@ -1,34 +1,46 @@
 """Модуль для редактирования тегов"""
-from tasks.tasks import Task, find_task
+from tasks.tasks import find_task
+from helpers.args import parse_flags
 
+def tags_command(tasks: list[Task], raw_args: list[str]):
+    args = parse_flags(raw_args)
+    task_id = args.get("--id")
 
-def tags_command(tasks: list[Task], args: list[str]):
-    if len(args) < 3:
-        print("Использование: tags <id> add|remove <tag>")
-    try:
-        task_id = int(args[0])
-    except ValueError:
-        print("[ERROR]: id должен быть числом")
+    if not task_id:
+        print("Использование: tags --id 5 [--add work,urgent] [--remove old]")
         return
-    action = args[1].lower()
-    tag = args[2].lower().strip()
+
+    try:
+        task_id = int(task_id)
+    except:
+        print("ID должен быть числом")
+        return
+
     task = find_task(tasks, task_id)
     if not task:
-        print(f"Задача {task_id} не найдена")
+        print(f"Заказ {task_id} не найден")
         return
 
-    if action == "add":
-        if not task["tags"]:
-            task["tags"] = [tag]
-            return
-        if tag not in task["tags"]:
-            task["tags"].append(tag)
-            return
+    if "tags" not in task or task["tags"] is None:
+        task["tags"] = []
 
-    if action == "remove":
-        if not task["tags"]:
-            return
-        try:
-            task["tags"].remove(tag)
-        except ValueError:
-            pass
+    changed = False
+
+    if "--add" in args:
+        new_tags = [t.strip().lower() for t in args["--add"].split(",") if t.strip()]
+        for tag in new_tags:
+            if tag not in task["tags"]:
+                task["tags"].append(tag)
+                changed = True
+
+    if "--remove" in args:
+        del_tags = [t.strip().lower() for t in args["--remove"].split(",") if t.strip()]
+        for tag in del_tags:
+            if tag in task["tags"]:
+                task["tags"].remove(tag)
+                changed = True
+
+    if not changed and ("--add" in args or "--remove" in args):
+        print("Нечего менять")
+    elif changed:
+        print(f"Теги обновлены для заказа {task_id}")
