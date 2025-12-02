@@ -3,11 +3,11 @@ from shlex import split
 from commands.help import help_command
 from commands.add import add_command
 from commands.list import list_command
-from commands.done import done_command
 from commands.edit import edit_command
 from commands.remove import remove_command
 from commands.tags import tags_command
 from storage.file import load, save
+from commands.status import status_command
 
 def main():
     tasks, next_id = load()
@@ -28,8 +28,8 @@ def main():
                 next_id = add_command(tasks, args, next_id)
             elif cmd == "list":
                 list_command(tasks, args)
-            elif cmd == "done":
-                done_command(tasks, args)
+            elif cmd == "status":
+                status_command(tasks, args)
             elif cmd == "edit":
                 edit_command(tasks, args)
             elif cmd == "remove":
