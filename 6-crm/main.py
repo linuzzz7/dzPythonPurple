@@ -1,3 +1,4 @@
+# Final
 from shlex import split
 from commands.help import help_command
 from commands.add import add_command
