@@ -4,19 +4,33 @@ from helpers.args import parse_flags
 
 VALID_STATUSES = {"new", "paid", "canceled", "done", "in_progress"}
 
-def status_command(tasks: list[Task], raw_args: list[str]):
+def status_command(tasks: list, raw_args: list[str]):
     args = parse_flags(raw_args)
-    task_id = args.get("--id")
-    new_status = args.get("--status") or next((v for k, v in args.items() if k not in ["--id"]), None)
 
-    if not task_id or not new_status:
+    task_id_str = args.get("--id")
+    if not task_id_str:
         print("Использование: status --id 5 paid")
         return
 
     try:
-        task_id = int(task_id)
-    except:
+        task_id = int(task_id_str)
+    except ValueError:
         print("ID должен быть числом")
+        return
+
+    # Ищем первый аргумент, который НЕ флаг (это и есть статус)
+    status = None
+    for arg in raw_args:
+        if not arg.startswith("--"):
+            status = arg.lower()
+            break
+
+    if not status:
+        print("Укажите новый статус: new, paid, canceled, done, in_progress")
+        return
+
+    if status not in VALID_STATUSES:
+        print(f"Недопустимый статус. Доступно: {', '.join(VALID_STATUSES)}")
         return
 
     task = find_task(tasks, task_id)
@@ -24,10 +38,6 @@ def status_command(tasks: list[Task], raw_args: list[str]):
         print(f"Заказ {task_id} не найден")
         return
 
-    new_status = new_status.lower()
-    if new_status not in VALID_STATUSES:
-        print(f"Статус должен быть: {', '.join(VALID_STATUSES)}")
-        return
-
-    task["status"] = new_status
-    print(f"Статус заказа {task_id} изменён на: {new_status}")
+    old_status = task["status"]
+    task["status"] = status
+    print(f"Статус заказа {task_id} изменён: {old_status} → {status}")
