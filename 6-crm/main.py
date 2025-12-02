@@ -1,15 +1,16 @@
-#import json
 from shlex import split
 from commands.help import help_command
 from commands.add import add_command
-from tasks.tasks import Task, make_task
-from helpers.args import parse_date
+from commands.list import list_command
+from commands.done import done_command
+from commands.edit import edit_command
+from commands.remove import remove_command
+from commands.tags import tags_command
 from storage.file import load, save
 
 def main():
-    file_path = "tasks.json"
     tasks, next_id = load()
-    print("Менеджер задач. Введи 'help' для справки.")
+    print("Менеджер заказов. Введи 'help' для справки.")
 
     while True:
         try:
@@ -20,32 +21,34 @@ def main():
             cmd = parts[0].lower()
             args = parts[1:]
 
-            match cmd:
-                case "help":
-                    help_command()
-                case "add":
-                    next_id = add_command(tasks, args, next_id)
-                    save(tasks)
-                case "list":
-                    pass
-                case "remove":
-                    pass
-                case "edit":
-                    pass         
-                case "tags":
-                    pass
-                case "exit":
-                    save(tasks)
-                    break
-                case _:
-                    print("Неизвестная команда.")
+            if cmd == "help":
+                help_command()
+            elif cmd == "add":
+                next_id = add_command(tasks, args, next_id)
+            elif cmd == "list":
+                list_command(tasks, args)
+            elif cmd == "done":
+                done_command(tasks, args)
+            elif cmd == "edit":
+                edit_command(tasks, args)
+            elif cmd == "remove":
+                remove_command(tasks, args)
+            elif cmd == "tags":
+                tags_command(tasks, args)
+            elif cmd == "exit":
+                save(tasks)
+                print("Пока!")
+                break
+            else:
+                print("Неизвестная команда")
+
+            if cmd in ["add", "edit", "remove", "tags", "done"]:
+                save(tasks)
+
         except KeyboardInterrupt:
-            save_tasks(file_path, tasks)
-            print("\nЗавершение приложения")
+            save(tasks)
+            print("\nПока!")
             break
-        except Exception as e:
-            save_tasks(file_path, tasks)
-            print(f"[ERROR]: {e}")
 
 if __name__ == "__main__":
     main()

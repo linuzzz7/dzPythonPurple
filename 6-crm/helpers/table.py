@@ -3,8 +3,7 @@ from tasks.tasks import Task
 from datetime import date
 
 def format_date(d: date) -> str:
-    res = date.strftime(d, "%Y-%m-%d")
-    return res
+    return date.strftime(d, "%Y-%m-%d")
 
 def stringify_table(tasks: list[Task]) -> str:
     headers = ["ID", "Название", "Статус", "Приоритет", "Теги", "Дата"]
